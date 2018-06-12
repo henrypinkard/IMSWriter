@@ -2,19 +2,20 @@ package HDF;
 
 import java.util.LinkedList;
 import java.util.TreeMap;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class HDFPreprocessor   {
        
    private int batchSize_;
    private ResolutionLevel[] resLevels_;
-   private TreeMap<Integer, long[][]> histograms_;
+   private volatile TreeMap<Integer, long[][]> histograms_;
    private int bitDepth_;
    private int width_,height_;
    
-   public HDFPreprocessor(int width, int height, ResolutionLevel[] resLevels) {   
-      bitDepth_ = 8;
-
+   public HDFPreprocessor(int width, int height, ResolutionLevel[] resLevels, int bitDepth) {   
+      bitDepth_ = bitDepth;
       resLevels_ = resLevels;
       batchSize_ = resLevels_[resLevels_.length - 1].getReductionFactorZ();
       width_ = width;
@@ -24,7 +25,6 @@ public class HDFPreprocessor   {
    
    //slice index of first in batch
    public PipelineImage process(LinkedList<PipelineImage> slices)  {           
-
       if ( slices.getFirst().slice == 0) {
          histograms_.put(slices.getFirst().channel, new long[resLevels_.length][256]);
       }
@@ -46,8 +46,8 @@ public class HDFPreprocessor   {
          }
          if (bitDepth_ > 8) {
             for (short s : (short[]) slices.get(i).pixels) {
-                histograms_.get(slices.getFirst().channel)[0][(int)(255*((s & 0xffff) / Math.pow(2,bitDepth_)))]++;
-            }
+                  histograms_.get(slices.getFirst().channel)[0][(int)(255*((s & 0xffff) / Math.pow(2,bitDepth_)))]++;
+               }
          } else {
             for (byte b : (byte[]) slices.get(i).pixels) {
                histograms_.get(slices.getFirst().channel)[0][b & 0xff]++;
@@ -112,9 +112,9 @@ public class HDFPreprocessor   {
                   }
                } else if (bitDepth_ > 8) {
                   if (slices.get(sliceIndex) == null) {
-                     System.out.println("null slice index");
+                     throw new RuntimeException("null slice index");
                   } else if (slices.get(sliceIndex) == null) {
-                     System.out.println("null pix");
+                     throw new RuntimeException("null pix");
                   }
                   val = (((short[]) slices.get(sliceIndex).pixels)[i] & 0xffff);
                   histograms_.get(slices.getFirst().channel)[resLevel][(int)(255*(val / Math.pow(2,bitDepth_)))]++;
@@ -145,7 +145,6 @@ public class HDFPreprocessor   {
       
       PipelineImage img = new PipelineImage(pixelsToWrite, slices.getFirst().channel,slices.getFirst().slice,
               slices.getFirst().frame, slices.getFirst().time, slices.getFirst().acqDate);
-      
       //If this is the last slice in the frame, histograms are finished, so send them for writing
       if (slices.getFirst().slice + batchSize_ >= resLevels_[0].getImageSizeZ()) {
          img.histograms = histograms_.get(slices.getFirst().channel);

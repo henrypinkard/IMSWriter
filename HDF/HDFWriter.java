@@ -10,33 +10,33 @@ import ncsa.hdf.hdf5lib.HDF5Constants;
 import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
 import ncsa.hdf.hdf5lib.exceptions.HDF5LibraryException;
 
-
 public class HDFWriter {
 
    private static final Color[] DEFAULT_CHANNEL_COLORS =
            new Color[]{new Color(75, 0, 130), Color.blue, Color.green, Color.yellow,
       Color.red, Color.pink, Color.orange, Color.magenta};
    private static final String VERSION = "7.6";
-   private int bitDepth_;
+   private final int bitDepth_;
    private String acqDate_ = "2012-11-08 16:14:17.000";
-   private int numChannels_, numFrames_;
-   private int imageWidth_, imageHeight_, numSlices_;
-   private double pixelSize_, pixelSizeZ_;
+   private final int numChannels_, numFrames_;
+   private final int imageWidth_, imageHeight_, numSlices_;
+   private final double pixelSize_, pixelSizeZ_;
    private int fileID_;
    private int timeInfoID_;
-   private DecimalFormat numberFormat_ = new DecimalFormat("#.###");
-   private ResolutionLevel[] resLevels_;
+   private final DecimalFormat numberFormat_ = new DecimalFormat("0.000");
+   private final ResolutionLevel[] resLevels_;
    private int[] resLevelIDs_;
-   private String directory_, filename_;
+   private String directory_;
+   private final String filename_;
    private TimePoint currentTimePoint_;
    private int timePointImageCount_ = 0;
    private final boolean compressImageData_;
-   private int slicesPerWrite_;
-   private Color[] channelColors_;
+   private final int slicesPerWrite_;
+   private final Color[] channelColors_;
    private boolean initialized_ = false;
 
    public HDFWriter(String directory, String filename, int numChannels,
-           int numFrames, int numSlices, double pixelSize, double pixelSizeZ, Color[] channelColors,
+           int numFrames, int numSlices, int byteDepth, double pixelSize, double pixelSizeZ, Color[] channelColors,
            int width, int height, ResolutionLevel[] resLevels) {
       compressImageData_ = true;
       directory_ = directory;
@@ -51,7 +51,7 @@ public class HDFWriter {
       } else {
          channelColors_ = channelColors;
       }
-      bitDepth_ = 8;
+      bitDepth_ = 8*byteDepth;
 
       imageWidth_ = width;
       imageHeight_ = height;
@@ -59,22 +59,17 @@ public class HDFWriter {
       slicesPerWrite_ = resLevels_[resLevels_.length - 1].getReductionFactorZ();
    }
 
-   public void close() {
-      try {
-         //if canceled
-         if (currentTimePoint_ != null) {
-            currentTimePoint_.closeTimePoint();
-         }
-
-         H5.H5Gclose(timeInfoID_);
-         for (int id : resLevelIDs_) {
-            H5.H5Gclose(id);
-         }       
-         H5.H5Fclose(fileID_);
-      } catch (Exception e) {
-         JOptionPane.showMessageDialog(null,"Couldn't close Imaris file");
-         e.printStackTrace();
+   public void close() throws HDF5Exception {
+      //if canceled
+      if (currentTimePoint_ != null) {
+         currentTimePoint_.closeTimePoint();
       }
+
+      H5.H5Gclose(timeInfoID_);
+      for (int id : resLevelIDs_) {
+         H5.H5Gclose(id);
+      }
+      H5.H5Fclose(fileID_);
    }
 
    //this function is not writing one image, but rather the minimum number of slices needed to 
@@ -122,15 +117,14 @@ public class HDFWriter {
       try {
          if (!directory_.endsWith(File.separator)) {
             directory_ = directory_ + File.separator;
-         }
-         new File(directory_ + filename_).exists();
+         }            
          fileID_ = H5.H5Fcreate(directory_ + filename_, HDF5Constants.H5P_DEFAULT,
                  HDF5Constants.H5P_DEFAULT, HDF5Constants.H5P_DEFAULT);
          addRootAttributes();
          makeDataSetInfo();
          makeDataSet();
       } catch (Exception e) {
-         JOptionPane.showMessageDialog(null, "Couldnt create imaris file");
+         JOptionPane.showMessageDialog(null, "Couldnt create imaris file" );
          e.printStackTrace();
       }
    }
@@ -163,7 +157,8 @@ public class HDFWriter {
                  + numberFormat_.format(rgb[1]) + " " + numberFormat_.format(rgb[2]));
          HDFUtils.writeStringAttribute(channelID, "ColorMode", "BaseColor");
          HDFUtils.writeStringAttribute(channelID, "ColorOpacity", "1.000");
-         HDFUtils.writeStringAttribute(channelID, "ColorRange", "0 " + ((int) Math.pow(2, bitDepth_)-1));
+         HDFUtils.writeStringAttribute(channelID, "ColorRange", 
+                 numberFormat_.format(0.0)+ " " + numberFormat_.format(Math.pow(2, bitDepth_)-1));
          HDFUtils.writeStringAttribute(channelID, "Description", "(description not specified)");
          HDFUtils.writeStringAttribute(channelID, "GammaCorrection", "1.000");
          HDFUtils.writeStringAttribute(channelID, "Name", "(name not specified)");
