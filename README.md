@@ -1,39 +1,4 @@
 # IMSWriter
-Java Library for writing Imaris IMS files  
+Java library for writing Imaris .ims files. The Java library calls HDF Java for writing an the HDF files (IMS files are just HDF5 files with a specific directory structure and a different extension). The Java HDF code itself calls native libraries. Included for convenience in the "lib" folder of this project are the binaries for OSX and Windows 64 bit. Other libraries that match with the verion this code was tested against can be found at https://support.hdfgroup.org/ftp/HDF5/prev-releases/HDF-JAVA/HDF-JAVA-2.7/bin/
 
-Matlab example for using library to write IMS file:  
-
-directory = '/Users/henrypinkard/example/';  
-
-%make sure the matlab librarypath.txt file is set correctly for JNI calls  
-javaaddpath ImarisWriter.jar  
-javaaddpath /Applications/HDF-JAVA.app/Contents/Java/jarhdf-2.10.0.jar  
-javaaddpath /Applications/HDF-JAVA.app/Contents/Java/jarhdf5-2.10.0.jar  
-
-
-pixelSizeZ = 2.0;  
-pixelSizeXY = 1.0;  
-slices = 10; %number of z slices  
-frames = 1; %number of time points  
-channels = 1;  
-colors = [];  
-width = 512;  
-height = 512;  
-prefix = 'Test ims file';  
-%open writer  
-imarisWriter = HDF.ImarisWriter(directory,prefix,width,height,slices,channels,frames,pixelSizeXY,pixelSizeZ,colors);  
-
-Object pixels, int slice, int channel, int frame, String date, String time)   
-%write single slice at a time  
-pixels = zeros(width, height);  
-
-%adjust as appropriate for each slice  
-slice = 0;  
-channel = 0;  
-frame = 0;  
-date = [];  
-time = [];  
-imarisWriter.addImage(pixels,slice,channel,frame,date,time);  
-
-%close after all slices written  
-imarisWriter.close();  
+This repo also contains a Python wrapper for calling the Java library. See example.py for an example of how to use it.
