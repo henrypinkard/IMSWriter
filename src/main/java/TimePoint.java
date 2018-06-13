@@ -1,4 +1,4 @@
-package HDF;
+package main.java;
 
 import javax.swing.JOptionPane;
 import ncsa.hdf.hdf5lib.H5;

@@ -1,4 +1,4 @@
-package HDF;
+package main.java;
 
 import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;

@@ -1,4 +1,4 @@
-package HDF;
+package main.java;
 
 import java.awt.Color;
 import java.io.PrintWriter;

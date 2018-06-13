@@ -1,4 +1,4 @@
-package HDF;
+package main.java;
 /**
  *
  * @author henrypinkard
