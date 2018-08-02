@@ -1,3 +1,6 @@
+"""
+This script was tested in Python 3.6
+"""
 from imariswriter import ImarisJavaWrapper
 import numpy as np
 import numpy.random as rand
