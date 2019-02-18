@@ -1,6 +1,5 @@
 from py4j.java_gateway import JavaGateway
 import os, inspect, time
-import numpy as np
 
 class ImarisJavaWrapper:
     """
@@ -33,7 +32,7 @@ class ImarisJavaWrapper:
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_value, traceback):
         self.writer.close()
 
     def write_z_slice(self, pixels, slice, channel, frame, timestamp):
