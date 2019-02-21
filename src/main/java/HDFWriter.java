@@ -13,8 +13,8 @@ import ncsa.hdf.hdf5lib.exceptions.HDF5LibraryException;
 public class HDFWriter {
 
    private static final Color[] DEFAULT_CHANNEL_COLORS =
-           new Color[]{new Color(75, 0, 130), Color.blue, Color.green, Color.yellow,
-      Color.red, Color.pink, Color.orange, Color.magenta};
+           new Color[]{new Color(0, 0, 255), new Color(0, 255, 255), new Color(0, 255, 0), 
+              new Color(255, 255, 0),new Color(255, 0, 0), new Color(255, 0, 255)};
    private static final String VERSION = "7.6";
    private final int bitDepth_;
    private String acqDate_ = "2012-11-08 16:14:17.000";
