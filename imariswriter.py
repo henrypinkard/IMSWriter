@@ -27,7 +27,7 @@ class ImarisJavaWrapper:
             os.sep.join([lib_path, 'jhdfobj.jar']), os.sep.join([lib_path, 'ImarisWriter.jar'])]),
             javaopts=['-Xmx4096m', '-Djava.library.path='+lib_path], die_on_exit=True)
         self.writer = self.javagateway.jvm.main.java.ImarisWriter(dir, name, int(shape[0]), int(shape[1]), int(byte_depth), int(shape[2]),
-                                                            int(num_channels), int(num_frames), float(pixel_size_xy), float(pixel_size_z)
+                                                            int(num_channels), int(num_frames), float(pixel_size_xy), float(pixel_size_z))
 
     def __enter__(self):
         return self
