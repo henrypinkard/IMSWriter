@@ -1,7 +1,7 @@
 #download specific libraries
 wget https://support.hdfgroup.org/ftp/HDF5/prev-releases/HDF-JAVA/HDF-JAVA-2.7/bin/linux64/hdf-java/lib/jhdfobj.jar https://support.hdfgroup.org/ftp/HDF5/prev-releases/HDF-JAVA/HDF-JAVA-2.7/bin/linux64/hdf-java/lib/jhdf5obj.jar https://support.hdfgroup.org/ftp/HDF5/prev-releases/HDF-JAVA/HDF-JAVA-2.7/bin/linux64/hdf-java/lib/jhdf5.jar https://support.hdfgroup.org/ftp/HDF5/prev-releases/HDF-JAVA/HDF-JAVA-2.7/bin/linux64/hdf-java/lib/jhdf.jar
 
-#compile example
+#compile example (from src directory)
 javac -classpath ".:/home/henry/GitRepos/IMSWriter/lib/jhdf5.jar:/home/henry/GitRepos/IMSWriter/lib/jhdf5obj.jar:/home/henry/GitRepos/IMSWriter/lib/jhdfobj.jar"  main/java/ImarisWriter.java
 
 #run file
