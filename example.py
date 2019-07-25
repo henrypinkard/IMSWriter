@@ -7,7 +7,7 @@ import numpy.random as rand
 
 directory = '/home/henry/'
 name = 'ims_test'
-shape =(1024, 1024, 20) #pixel dimensions
+shape =(1024, 1024, 12) #pixel dimensions
 byte_depth = 1
 num_channels = 2
 num_frames = 3
@@ -25,7 +25,7 @@ with ImarisJavaWrapper(directory, name, shape, byte_depth, num_channels, num_fra
 	        for z_index in range(shape[2]):
 	            #generate a random image for testing
 	            #TODO: replace this with real data
-	            tile = rand.randint(0, 240, shape[2], dtype=np.uint8)
+	            tile = rand.randint(0, 240, shape[:2], dtype=np.uint8)
 	            #TODO: replace this with time image was taken in ms for accurate time calibration
 	            elapsed_time_ms = time_index * 10000
 	            print(time_index, channel_index, z_index)

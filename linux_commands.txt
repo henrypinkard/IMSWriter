@@ -1,8 +1,11 @@
 #download specific libraries
 wget https://support.hdfgroup.org/ftp/HDF5/prev-releases/HDF-JAVA/HDF-JAVA-2.7/bin/linux64/hdf-java/lib/jhdfobj.jar https://support.hdfgroup.org/ftp/HDF5/prev-releases/HDF-JAVA/HDF-JAVA-2.7/bin/linux64/hdf-java/lib/jhdf5obj.jar https://support.hdfgroup.org/ftp/HDF5/prev-releases/HDF-JAVA/HDF-JAVA-2.7/bin/linux64/hdf-java/lib/jhdf5.jar https://support.hdfgroup.org/ftp/HDF5/prev-releases/HDF-JAVA/HDF-JAVA-2.7/bin/linux64/hdf-java/lib/jhdf.jar
 
-#compile example (from src directory)
-javac -classpath ".:/home/henry/GitRepos/IMSWriter/lib/jhdf5.jar:/home/henry/GitRepos/IMSWriter/lib/jhdf5obj.jar:/home/henry/GitRepos/IMSWriter/lib/jhdfobj.jar"  main/java/ImarisWriter.java
+#compile example (from src directory) into build directory
+javac -d "../build" -classpath  ".:/home/henry/GitRepos/IMSWriter/lib/jhdf5.jar:/home/henry/GitRepos/IMSWriter/lib/jhdf5obj.jar:/home/henry/GitRepos/IMSWriter/lib/jhdfobj.jar"  main/java/ImarisWriter.java
+
+#package into jar (from build direcotry of project)
+jar cfv ../lib/ImarisWriter.jar *
 
 #run file
 java -classpath ".:/home/henry/GitRepos/IMSWriter/lib/jhdf5.jar:/home/henry/GitRepos/IMSWriter/lib/jhdf5obj.jar:/home/henry/GitRepos/IMSWriter/lib/jhdfobj.jar" -Djava.library.path=/home/henry/GitRepos/IMSWriter/lib/ main.java.ImarisWriter
