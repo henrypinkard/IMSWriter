@@ -38,7 +38,7 @@ public class ImarisWriter {
       int width = 400, height = 400;
       int slices = 1, channels = 1, frames = 2;
       int byteDepth = 2;
-      ImarisWriter writer = new ImarisWriter("/Users/henrypinkard/Desktop/", "ImsTest", width, height, byteDepth, slices, channels, frames, 1.0, 1.0);
+      ImarisWriter writer = new ImarisWriter("/home/henry/GitRepos/IMSWriter/", "ImsTest", width, height, byteDepth, slices, channels, frames, 1.0, 1.0);
       for (int timeIndex = 0; timeIndex < frames; timeIndex++) {
          for (int sliceIndex = 0; sliceIndex < slices; sliceIndex++) {
             byte[] pix = new byte[2*width * height];
